@@ -7,7 +7,7 @@ of each line alone.  Only change the value.  Do not use quotes around values.
 //
 
 #PathtoFiles = /Users/katzlab32/Documents/PhyloTOL/DataFiles/		##Path to folders ncbiFiles, BlastFiles, allOGFiles and the OGs of interest file
-#testPipelineList = metadupli_e				##Name of the file with the OGs of interest -  this file needs to be in the same location as your datafile folders
+#testPipelineList = duplication				##Name of the file with the OGs of interest -  this file needs to be in the same location as your datafile folders
 #listTaxaInterest = metadupli_taxa						##Name of the file with the taxa of interest. If you want to include all taxa, set parameter to 'n'
 #blastCutOff = 1e-20						##Blast e-value cutoff (also depends on how blasts were run)
 #seqLenCompCutOff = 10						##We remove very short sequences after  removing columns in guidance - this is the amino acid length cutoff 
@@ -16,4 +16,4 @@ of each line alone.  Only change the value.  Do not use quotes around values.
 #seqcutoff = 0.3      						##During guidance, taxa are removed if their score is below this cutoff (default as of 11/2014 = .35)
 #colcutoff = 0.4							##During guidance, taxa are removed if their score is below this cutoff (default as of 11/2014 = .40)
 #rescutoff = 0.0                                                        ##During guidance, residues are removed if their score is below this cutoff (default as of 03/2017 = .40)
-#concatAlignment = n						##Do you want to remove paralogs and generate an alignment for concatenation? (y/n) (default as of 03/2017 = n)
+#concatAlignment = y						##Do you want to remove paralogs and generate an alignment for concatenation? (y/n) (default as of 03/2017 = n)
