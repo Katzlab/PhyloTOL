@@ -5,7 +5,7 @@ unset SGE_ROOT
 mypwd=$(echo `pwd`)
 echo $mypwd
 
-## version 2.2 
+## version 2.3 
 
 ## command example: ./exeGuidance_v2.sh -i /home/mmfonseca/2015-Katz/2015-September/00-FASTA/OG5_129999.fas -o /state/partition1/mmfonseca/2015-Katz/ -t 2 -c /home/mmfonseca/2015-Katz/2015-September/01-Guidance_out -s 0.4 -l 0.5 -r 0.4 -m nr
 
@@ -63,9 +63,22 @@ while getopts ":h:i:o:t:c:g:s:l:r:m:" opt; do
                         echo
                         echo "      script developed by Miguel M Fonseca"
                         echo "      mig.m.fonseca@gmail.com"
+                        echo
+                        echo
+                        echo "  exeGuidance_v2.2.sh (2017-2018)"
+                        echo "      fully adapted to work in PhyloToL"
+                        echo
+                        echo "      Integrated by Mario A Ceron-Romero to PhyloToL"
+                        echo "      mceronromero@umass.edu"           
+                        echo
+                        echo
+                        echo "  exeGuidance_v2.3.sh (06/20/18)"
+                        echo "      for Tree of Eukaryotes project"
+                        echo "      Modified (new version) by Mario A Ceron-Romero"
+                        echo "      mceronromero@umass.edu"                        
                         echo "------------------------------------------------------------------------------"
                         echo
-                        echo "To execute "exeGuidance_v2.2.sh" you need the following arguments:"
+                        echo "To execute "exeGuidance_v2.3.sh" you need the following arguments:"
                         echo
                         echo "-i"
                         echo "    absolute path to the unaligned fasta file."
@@ -109,19 +122,6 @@ shift $(( OPTIND - 1 ))
 
 if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "${OUTHOMEDIR}" ] || [ -z "${GUIDITER}" ] || [ -z "${SEQCUT}" ] || [ -z "${COLCUT}" ] || [ -z "${RESCUT}" ] || [ -z "${MODE}" ]; then usage; fi
 
-
-	##########################
-	## Loading Modules
-	##########################
-		
-#		module load openmpi/1.8.4
-#		module load openmpi/1.8.5
-#		module load perl/5.20.1 
-#		module load bio/mafft/7.212
-#		module load bio/guidance/1.5
-
-	###########################
-
 	
 	##########################
 	## Getting Gene family name
@@ -132,12 +132,11 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 		genename=$(echo ${myarr[$lastpos-1]})
 	
 	##########################
-	
-	
+		
 	
 	####################################################
 	##												  ## 
-	##				EXECUTING GUIDANCE 1.5			  ##
+	##				EXECUTING GUIDANCE 2.2			  ##
 	##												  ##
 	####################################################	
 
@@ -201,7 +200,7 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 			
 				scratchFASTA="$SCRATCHDIR/$genename/$genename"
 				scratchDIR="$SCRATCHDIR/$genename/"
-				guidancepl="~/PhyloTOL_paral1/Scripts/guidance.v2.02/www/Guidance/guidance.pl" # new guidance 2.02
+				guidancepl="./guidance.v2.02/www/Guidance/guidance.pl" # new guidance 2.02
 				seqcutoff="$SEQCUT"
 				colcutoff="$COLCUT"
 				rescutoff="$RESCUT"
@@ -209,11 +208,11 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 				echo ""
 				echo "[$run] lauching guidance.pl ..."
 				if [ "$fnr" -eq 1 ]; then
-					echo "perl $guidancepl --seqFile $scratchFASTA --msaProgram MAFFT --seqType aa --outDir $scratchDIR --seqCutoff $seqcutoff --colCutoff $colcutoff --outOrder as_input --bootstraps 1 --MSA_Param \\\-'-${mafftalg} --maxiterate 1000 --thread $NTHREADS --bl 62 --anysymbol'" | sh
+					echo "perl $guidancepl --seqFile $scratchFASTA --msaProgram MAFFT --seqType aa --outDir $scratchDIR --seqCutoff $seqcutoff --colCutoff $colcutoff --outOrder as_input --bootstraps 100 --MSA_Param \\\-'-${mafftalg} --maxiterate 1000 --thread $NTHREADS --bl 62 --anysymbol'" | sh
 					exe=0
-					run=$(( run+1 ))
+					fnr=2
 				else
-					echo "perl $guidancepl --seqFile $scratchFASTA --msaProgram MAFFT --seqType aa --outDir $scratchDIR --seqCutoff $seqcutoff --colCutoff $colcutoff --outOrder as_input --bootstraps 1 --MSA_Param '\-\-$mafftalg \-\-thread $NTHREADS'" | sh
+					echo "perl $guidancepl --seqFile $scratchFASTA --msaProgram MAFFT --seqType aa --outDir $scratchDIR --seqCutoff $seqcutoff --colCutoff $colcutoff --outOrder as_input --bootstraps 20 --MSA_Param '\-\-$mafftalg \-\-thread $NTHREADS'" | sh
 				fi				
 				#echo "perl $guidancepl --seqFile $scratchFASTA --msaProgram MAFFT --seqType aa --outDir $scratchDIR --seqCutoff $seqcutoff --colCutoff $colcutoff --proc_num $NTHREADS --outOrder as_input --bootstraps 100 --MSA_Param \\\-'-${mafftalg} --maxiterate 1000 --bl 62 --anysymbol --thread 1'" | sh
 #				echo "perl $guidancepl --seqFile $scratchFASTA --msaProgram MAFFT --seqType aa --outDir $scratchDIR --seqCutoff $seqcutoff --colCutoff $colcutoff --outOrder as_input --bootstraps 1 --MSA_Param \\\-'-${mafftalg} --maxiterate 1000 --thread $NTHREADS --bl 62 --anysymbol'" | sh
@@ -247,8 +246,9 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 				
 				## if there are no sequences to be removed -> finish guidance
 				if [ "$NLOWSEQ" -eq 0 ]; then
-#					exe=0
-					fnr=1
+					if [ "$fnr" -eq 0 ]; then 
+						fnr=1 
+					fi
 					touch $SCRATCHDIR/$genename/NLowCutoffEquals0
 					echo "[$run] There are no sequences to be removed -> Quitting Guidance"
 					
@@ -259,8 +259,9 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 				
 				## if maximum of guidance iterations -> finish guidance MACR
 				if [ "$DONE" -eq "$run" ]; then
-#					exe=0
-					fnr=1
+					if [ "$fnr" -eq 0 ]; then 
+						fnr=1 
+					fi
 					echo "[$run] maximum guidance iterations: $DONE"
 					
 					if [ "$NABOVESEQ" -ge 4 ]; then
@@ -284,6 +285,8 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 							echo "---"	
 						fi				
 					fi
+				elif [ "$fnr" -eq 1 ]; then
+					run=$(( run+1 ))
 				fi
 			else
 				echo "[$run] GUIDANCE ABORTED [2]: the initial sequence file contained 3 or less sequences in total"
@@ -299,9 +302,7 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 	## 03-guidance_v1.2c.pl
 	##########################
 	
-#	if [ ! -f $SCRATCHDIR/$genename/NInitialSeqBelow4 ] | [ ! -f $SCRATCHDIR/$genename/NAboveCutoffBelow4 ]; then  # MACR modified to continue pipeline after guidance crash 
 	if [ ! -f $SCRATCHDIR/$genename/NSeqBelow4 ]; then  # MACR modified to continue pipeline after guidance crash 
-#	if [ -f $]
 				
 		## After Guidance execution let's see if there were sequences removed
 		## to do it, we have to execute the script 03-guidance_v1.2c.pl
@@ -317,8 +318,6 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 		DATATYPE="AA"
 		PREFIX="${genename}.run${run}"
 
-#		echo "perl $myscript -filename MSA.MAFFT.aln.With_Names -inDir $Guidance_out_DIR -outDir $Guidance_out_DIR -siteCutoff $RES_CUTOFF -colCutoff $COL_CUTOFF -seqCutoff $SEQ_CUTOFF -dataType $DATATYPE -prefix $PREFIX" | sh > $Guidance_out_DIR/${PREFIX}.log
-#		echo "perl $myscript --filename MSA.MAFFT --inDir $Guidance_out_DIR --outDir $Guidance_out_DIR --siteCutoff $RES_CUTOFF --colCutoff $COL_CUTOFF --seqCutoff $SEQ_CUTOFF --dataType $DATATYPE --prefix $PREFIX" #| sh > $Guidance_out_DIR/${PREFIX}.log
 		perl $myscript --filename MSA.MAFFT --inDir $Guidance_out_DIR --outDir $Guidance_out_DIR --siteCutoff $RES_CUTOFF --colCutoff $COL_CUTOFF --seqCutoff $SEQ_CUTOFF --dataType $DATATYPE --prefix $PREFIX   # MACR modified here, it wasn't working properly
 		echo "[$run] ...perl script 03-guidance_v1.2c.pl finished"
 
@@ -347,9 +346,9 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 #		trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.nex -gapthreshold 0.05 -nexus
 #		trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.fas -gapthreshold 0.05 -fasta
 #		trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.phy -gapthreshold 0.05 -phylip
-		~/PhyloTOL_paral1/Scripts/trimal-trimAl/source/trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.nex -gapthreshold 0.05 -nexus
-		~/PhyloTOL_paral1/Scripts/trimal-trimAl/source/trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.fas -gapthreshold 0.05 -fasta
-		~/PhyloTOL_paral1/Scripts/trimal-trimAl/source/trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.phy -gapthreshold 0.05 -phylip
+		./trimal-trimAl/source/trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.nex -gapthreshold 0.05 -nexus
+		./trimal-trimAl/source/trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.fas -gapthreshold 0.05 -fasta
+		./trimal-trimAl/source/trimal -in $SCRATCHDIR/$genename/*phy -out $SCRATCHDIR/$genename/$genename.95gapTrimmed.phy -gapthreshold 0.05 -phylip
 		echo "[$run] `head -1 $SCRATCHDIR/$genename/$genename.95gapTrimmed.phy` Head -1 of alignment AFTER filtering gaps"
 		echo "[$run] ...trimal finished"
 		echo ""
@@ -374,8 +373,8 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 					PHYLIP="$SCRATCHDIR/$genename/$genename.RAxML.phy"
 		
 				## RAxML commands
-#				raxmlHPC -s $PHYLIP -m PROTGAMMALG -f d -p 12345 -# 1 -n $genename # -T 3
-				raxmlHPC-PTHREADS-AVX2 -s $PHYLIP -m PROTGAMMALG -f d -p 12345 -# 1 -n $genename -T $NTHREADS
+				raxmlHPC -s $PHYLIP -m PROTGAMMALG -f d -p 12345 -# 1 -n $genename -T $NTHREADS
+#				raxmlHPC-PTHREADS-AVX2 -s $PHYLIP -m PROTGAMMALG -f d -p 12345 -# 1 -n $genename -T $NTHREADS
 				echo "[$run] ...RAxML finished"
 				echo ""
 			else
@@ -388,19 +387,14 @@ if [ -z "${FASTA}" ] || [ -z "${SCRATCHDIR}" ] || [ -z "${NTHREADS}" ] || [ -z "
 	## move output to home directory
 	echo "[$run] moving scratch output to home output directory"
 	echo "[$run] mkdir $OUTHOMEDIR/$genename.output/"
-#	echo "[$run] cp $scratchDIR/* $OUTHOMEDIR/$genename.output/"
 	echo "[$run] cp $SCRATCHDIR/$genename/* $OUTHOMEDIR/$genename.output/"
 	echo "[$run] rm -r $scratchDIR/"
 	mkdir $OUTHOMEDIR/$genename.output/
-#	cp $scratchDIR/* $OUTHOMEDIR/$genename.output/
 	cp $SCRATCHDIR/$genename/* $OUTHOMEDIR/$genename.output/
-#	rm -r $scratchDIR/
 	rm -r $SCRATCHDIR/$genename/
 	
 	if [ "$MODE" != "nr" ]; then
-		## move other RAxML outputs that are saved in the directory where we lauched the bash file
 		echo "[$run] home RAxML files to home output directory"
 		echo "[$run] mv $mypwd/RAxML_*$genename* $OUTHOMEDIR/$genename.output/"
 		mv $mypwd/RAxML_*$genename* $OUTHOMEDIR/$genename.output/ 
 	fi
-#	fi
