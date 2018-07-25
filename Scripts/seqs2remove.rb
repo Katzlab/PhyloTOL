@@ -85,7 +85,7 @@ puts "\nseqs2remove.rb: removing sequences from Databases:"
 				ncbisequences << line.gsub("\n", "")
 				seq = ''
 			end
-			if line =~ /^[A-z]/ then seq = seq + line.gsub("\n", "") end
+			if line =~ /^([A-z]|\*)/ then seq = seq + line.gsub("\n", "") end
 		end
 		ncbisequences << seq
 		
@@ -117,6 +117,7 @@ puts "\nseqs2remove.rb: removing sequences from Databases:"
 			end
 			index += 1
 		end
+		newncbiFile.close
 	end
 end
 
