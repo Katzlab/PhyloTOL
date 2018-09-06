@@ -36,10 +36,33 @@ for line in infile:
 			rescutoff = float(value)
 
 # make directories
-PathtoOutput = os.path.abspath(path) + "/out_resume"
+PathtoOutput = os.path.abspath(path) + "/out_resume/"
 if os.path.exists(PathtoOutput):
-	print "The folder " + PathtoOutput + " exists. Choose another path\n\n"
-	quit()
+	print "The folder " + PathtoOutput + " exists."
+	ans = raw_input('Do you want to lauch RAxML? (y or n): ')
+	numberTrees = 0
+	raxmlTemp = os.path.abspath(path) + "/RAxML/"
+	os.system("mkdir "  + raxmlTemp)
+	if ans == "y":
+		for aln in os.listdir(PathtoOutput + oglistName + "_results2keep"):
+			if "Trim" in aln:
+				os.system("cp " + PathtoOutput + oglistName + "_results2keep/" + aln + " " + raxmlTemp)
+				numberTrees += 1
+				
+		print "** number of trees that would be produced is " + str(numberTrees) + "\n\n"
+	
+		for aln in os.listdir(raxmlTemp):
+			if "Trim" in aln:
+
+				input = raxmlTemp + aln
+				output =  aln[:10] + '_postguidance.fas' 
+				os.system("raxmlHPC-AVX2 -s " + input + " -m PROTGAMMALG -f d -p 12345 -# 1 -w " + raxmlTemp + " -n " + output)	
+	#			os.system("raxmlHPC-PTHREADS-AVX2 -s " + input + " -m PROTGAMMALG -f d -p 12345 -# 1 -n " + output + " -T 3")
+				os.system("mv " + raxmlTemp + "RAxML_bestTree." + output + " " + PathtoOutput + oglistName + "_results2keep/" + "RAxML_bestTree." + output + "_renamed.tre")
+		quit()		
+	else:
+		print "The folder " + PathtoOutput + " exists. Choose another path\n\n"
+		quit()
 else:
 	os.system('mkdir ' + PathtoOutput)
 	os.system('mkdir ' + PathtoOutput + "/Guidance")
