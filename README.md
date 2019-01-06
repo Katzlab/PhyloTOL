@@ -1,4 +1,4 @@
-# PhyloTOL
+# PhyloToL
 
 PhyloToL: Phylogenomic Tree of Life
 
