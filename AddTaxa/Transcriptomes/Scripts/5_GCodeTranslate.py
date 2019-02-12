@@ -254,13 +254,17 @@ def check_args():
 
 	args = parser.parse_args()
 	
-	args.tsv_file = args.input_file.replace('.fasta','_allOGCleanresults.tsv')
-	
+	try:
+		args.tsv_file = args.input_file.replace('.fasta','_allOGCleanresults.tsv')
+	except:
+		args.tsv_file = None
+
 	quit_eval = return_more_info(args)
 	if quit_eval > 0:
 		sys.exit()
 		
 	### Adding in names to 'arg' class for more easy use throughout the script	
+	
 	args.ntd_out = args.input_file.split('.fas')[0]+'_'+args.genetic_code.title()+'_NTD.ORF.fasta'
 	args.aa_out = args.input_file.split('.fas')[0]+'_'+args.genetic_code.title()+'_AA.ORF.fasta'
 	args.tsv_out = args.input_file.split('.fas')[0]+'_'+args.genetic_code.title()+'_allOGCleanresults.tsv'

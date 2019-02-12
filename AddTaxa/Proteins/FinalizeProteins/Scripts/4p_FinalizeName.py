@@ -341,7 +341,7 @@ def clean_up(args):
 	
 	os.system('rm -rf ../'+args.file_prefix)
 	
- 	os.system('rm ../ToRename/*'+args.file_prefix+'*')
+	os.system('rm ../ToRename/*'+args.file_prefix+'*')
 
 	if len(os.listdir('../ToRename/')) == 0:
 		os.system('rm -r ../ToRename')

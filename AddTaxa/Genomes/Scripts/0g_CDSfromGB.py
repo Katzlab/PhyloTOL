@@ -213,6 +213,6 @@ def main():
 
 	os.system('rm '+args.input_file)
 	
- 	print (color.BOLD +'Next Script is: '+ color.PURPLE + '1g_RenameCDS.py\n\n'+ color.END)
+	print (color.BOLD +'Next Script is: '+ color.PURPLE + '1g_RenameCDS.py\n\n'+ color.END)
 	
 main()
