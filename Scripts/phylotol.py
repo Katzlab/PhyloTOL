@@ -51,6 +51,7 @@ def get_parameters():
 		
 	return PathtoFiles,testPipelineList,listTaxaInterest,blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment
 
+
 def writelog(PathtoOutput,string):
 	logfile = open(PathtoOutput + '/logfile', 'a')
 	logfile.write(string + '\n')
@@ -184,8 +185,8 @@ def main():
 					print "Similarity filter will be applied to these taxa:\n\n%s\n\n" % taxa2SF
 					
 
-# MACR - Creating folders and writing logfiles.
-			
+# MACR - Creating files, folders and writing logfiles.
+				
 	PathtoOutput =  '../my-data/' + testPipelineList + '_results/Output/'
 	os.system('mkdir ../my-data/')
 	os.system('mkdir ../my-data/' + testPipelineList + '_results')
@@ -199,6 +200,29 @@ def main():
 	writelog(PathtoOutput,'colcutoff = ' + str(colcutoff))
 	writelog(PathtoOutput,'rescutoff = ' + str(rescutoff))
 	writelog(PathtoOutput,'concatAlignment = ' + concatAlignment + ' (y = remove paralogs and make alignment, n = keep paralogs and do not make alignment)')
+	
+	# MACR 03/04/19 -- added this for calculating og average length for OF and SF
+	oglengths = open(PathtoOutput + "oglengths", "a")
+	ogs = open(PathtoFiles + "/" + testPipelineList, "r").readlines()
+	for og in ogs:
+		og = og.strip()
+		seq_len = {}
+		ogFile = open(PathtoFiles + "/allOG5Files/" + og, "r").readlines()
+			
+		for line in ogFile:
+			line = line.strip()
+
+			if line.startswith(">"):
+				tag = line
+				seq_len[tag] = 0
+			else:
+				seq_len[tag] += len(line)
+			
+		og_totalLength = 0
+		for seqLength in seq_len.values() : og_totalLength += seqLength
+		averageLength = og_totalLength / len(seq_len.values())
+		oglengths.write("%s\t%s\n" % (og, averageLength))
+	oglengths.close()
 	
 	'''
 	MACR - Taxon step with changes for Pipeline 3

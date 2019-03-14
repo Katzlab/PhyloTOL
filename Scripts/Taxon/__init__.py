@@ -26,6 +26,7 @@ class Taxon:
 		self.OGxSeqHashProt = {} #dictionary with translated seqeunces for each og of interest are stored
 		self.blastCutOff = Pipeline.blastCutOff
 		self.tooSimCutOff = Pipeline.tooSimCutOff
+		self.oglengths = Pipeline.oglengths
 
 		##############################################################
 		# Step 0 - This is where the different steps, coded further down, are called

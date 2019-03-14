@@ -28,7 +28,7 @@ class Pipeline: #given a file with a list of OGs, makes the interestList and
 				self.wge.append(taxon.split(',')[1])
 		self.taxa2SF = taxa2SF
 		self.taxa2analyze = taxa2analyze
-		self.OGList = [] #list of gene names
+		self.OGList = [] 
 		self.OGsofInterestList = [] #list of Gene instances
 		self.TaxonList = [] # list of Taxon instances
 		self.OGswithTaxofInterest = []
@@ -52,8 +52,8 @@ class Pipeline: #given a file with a list of OGs, makes the interestList and
 		if not os.path.exists(self.PathtoOutput + '/intermediate_and_logfiles/'):
 			os.system('mkdir ' + self.PathtoOutput + '/intermediate_and_logfiles/')
 		if not os.path.isdir(self.PathtoOutput + '/seqcodeFiles/'):
-			os.system('mkdir ' + self.PathtoOutput + '/seqcodeFiles/')			
-
+			os.system('mkdir ' + self.PathtoOutput + '/seqcodeFiles/')
+		
 # Calling methods ----- MAC
 
 		if restart == 'no':
