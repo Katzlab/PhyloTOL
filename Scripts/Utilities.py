@@ -211,7 +211,7 @@ def contaminationRemoval(treeFolder, PathtoFiles, rules, homologDB):
 	nonHomol_out.close()
 	nonHomol_treeWnhom.close() 
 			
-	os.system('python walk_tree_contamination_single.py ' + treeFolder + ' sisterReport')
+	os.system('python3 walk_tree_contamination_single.py ' + treeFolder + ' sisterReport')
 	print "\nUtilities.py - contaminationRemoval(): Writing sister report ...\n"
 	time.sleep(60)
 	os.system('ruby seqs2remove.rb ' + PathtoFiles + ' sisterReport ' + rules + ' seqs2remove_out ' + 'nonHomologs')
