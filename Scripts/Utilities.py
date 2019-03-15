@@ -48,8 +48,8 @@ def iterGuidance(oglist, og, PathtoOutput, guidanceIter, seqcutoff, colcutoff, r
 				
 		if str(mode) != "ng":
 			print "\n" + og + ": Running Guidance"
-			print 'bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 15 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode)
-			os.system('bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 15 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode))
+			print 'bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 1 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode)
+			os.system('bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 1 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode))
 			os.system('cp ' + path2og + ' ' + tokeepdir + og + '_preguidance.fas') # non-aligned pre-guidance file		
 		
 #			if not os.path.exists(outdir + og + 'forGuidance.fas.output/NInitialSeqBelow4') or not os.path.exists(outdir + og + 'forGuidance.fas.output/NAboveCutoffBelow4'):	
