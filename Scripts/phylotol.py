@@ -239,7 +239,7 @@ def main():
 		if taxa2analyze is not 'all':		
 			taxonBlast = f[:10]
 			if taxonBlast in taxa2analyze:
-				print '\n' + f + '\n'
+				print('\n' + f + '\n')
 				if f[0] != '.':
 					try:
 						newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)
@@ -252,7 +252,7 @@ def main():
 	
  	# MACR - Pipeline 3: Given that the user does not provide a list of taxa of interest. Run pipeline for all taxa
 	
-			print '\n' + f + '\n'
+			print('\n' + f + '\n')
 			if f[0] != '.':
 				try:
 					newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)

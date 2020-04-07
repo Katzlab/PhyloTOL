@@ -18,7 +18,7 @@ class Alignment: #reads in an alignment file and makes an Alignment instance
 		#print self.name
 		infile = open(self.name,'r')
 		inSeq = SeqIO.parse(infile,'fasta')
-		print infile
+		print(infile)
 		
 		for seq in inSeq:
 				self.seqs.append(seq)
