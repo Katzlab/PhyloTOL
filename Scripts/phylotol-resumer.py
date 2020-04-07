@@ -39,7 +39,7 @@ for line in infile:
 PathtoOutput = os.path.abspath(path) + "/out_resume/"
 if os.path.exists(PathtoOutput):
 	print("The folder " + PathtoOutput + " exists.")
-	ans = raw_input('Do you want to lauch RAxML? (y or n): ')
+	ans = input('Do you want to lauch RAxML? (y or n): ')
 	numberTrees = 0
 	raxmlTemp = os.path.abspath(path) + "/RAxML/"
 	os.system("mkdir "  + raxmlTemp)

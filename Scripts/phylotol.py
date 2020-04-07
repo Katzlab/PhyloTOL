@@ -312,7 +312,7 @@ def main():
 			answer_Cleaner = 'y'
 		else:
 			while (answer_Cleaner not in valid_answers):  
-				answer_Cleaner = raw_input("\n\nDo you want to execute the cleaner? (y/n): ")
+				answer_Cleaner = input("\n\nDo you want to execute the cleaner? (y/n): ")
 	
 				if (answer_Cleaner not in valid_answers): 
 					print("\n\nplease answer y or n")
