@@ -243,11 +243,11 @@ def main():
 				if f[0] != '.':
 					try:
 						newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)
-					except Exception, e:
+					except Exception as e:
 						elog = open('errorlog','a')
-						elog.write(f + " failed on %s with: %s" % (f, e.message))
+						elog.write(f + " failed on %s with: %s" % (f, e))
 						elog.close()
-						print ("failed on %s with: %s" % (f, e.message))
+						print ("failed on %s with: %s" % (f, e))
 		else:
 	
  	# MACR - Pipeline 3: Given that the user does not provide a list of taxa of interest. Run pipeline for all taxa
@@ -256,11 +256,11 @@ def main():
 			if f[0] != '.':
 				try:
 					newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)
-				except Exception, e:
+				except Exception as e:
 					elog = open('errorlog','a')
-					elog.write(f + " failed on %s with: %s" % (f, e.message))
+					elog.write(f + " failed on %s with: %s" % (f, e))
 					elog.close()
-					print ("failed on %s with: %s" % (f, e.message))
+					print ("failed on %s with: %s" % (f, e))
 		
 	'''
 	JG - Pipeline 3
@@ -320,11 +320,11 @@ def main():
 		if answer_Cleaner is 'y':
 			Utilities.cleaner(testPipelineList, PathtoFiles, PathtoOutput)
 		
-	except Exception, e:
+	except Exception as e:
 		elog = open('errorlog','a')
 		line = open(PathtoFiles+ '/FileLists_' + testPipelineList + '/' + f,'r').read()
-		elog.write(line + " failed on %s with: %s" % (f, e.message))
+		elog.write(line + " failed on %s with: %s" % (f, e))
 		elog.close()
-		print ("failed on %s with: %s" % (f, e.message))
+		print ("failed on %s with: %s" % (f, e))
 	return True				
 main()
