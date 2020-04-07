@@ -104,7 +104,7 @@ def main():
 	print('The log file tells the length of the added sequence and the order in which they are added, so you can figure out your breakpoints. ')
 	print('##############################################################')
 	 
-	path2alignments = (raw_input("path to the purged alignments: ")).strip() + "/"
+	path2alignments = (input("path to the purged alignments: ")).strip() + "/"
 	outfile = open('concat_alignment.fasta','w')
 	newAlignment = Alignment('')
 #	newAlignment = ''

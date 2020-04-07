@@ -98,7 +98,7 @@ class Gene:
 		for seq in inseq:
 			 newline = re.sub('U','X',str(seq.seq))
 			 newline = newline.replace('*', 'X')   # MACR --- for pipeline V3, we saw some of these cases in new data
-			 if (newline) > self.seqLenCompCutOff:
+			 if len(newline) > self.seqLenCompCutOff:
 			 	outortho.write('>' + seq.id + '\n' + newline + '\n')
 		outortho.close()	 
 		os.system('mv  ' + self.PathtoOutput + '/Guidance/'+ self.OG + 'forGuidance.fas2 ' + self.PathtoOutput + '/Guidance/'+ self.OG + 'forGuidance.fas')
