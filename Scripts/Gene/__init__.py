@@ -51,7 +51,7 @@ class Gene:
 
 		os.system ('ls ' + self.PathtoOutput + '/fasta2keep/' + self.OG + '* > ' + self.PathtoOutput + '/' + self.OG + '_list')
 		seqsList = open(self.PathtoOutput + '/' + self.OG + '_list', 'r').readlines()
-		if "seqsList" in globals(): 
+		if "seqsList" in locals(): 
 			os.system('cat ' + self.PathtoOutput + '/' + self.OG + '_filtered.fas' + ' ' +  self.PathtoOutput + '/fasta2keep/' + self.OG + '* > ' + self.PathtoOutput + '/' + self.OG + '_all.fas')
 		else:
 			os.system('cp '+ self.PathtoOutput + '/' + self.OG + '_filtered.fas ' + self.PathtoOutput + '/' + self.OG + '_all.fas')
