@@ -207,7 +207,7 @@ class Gene:
 			seqDict[seq] = int(num)
 
 
-		sorted_seqDict = sorted(seqDict.iteritems(), key=operator.itemgetter(1), reverse = True)	
+		sorted_seqDict = sorted(seqDict.items(), key=operator.itemgetter(1), reverse = True)	
 		xx = open(self.PathtoTemp + '/clade_size.txt','w') #clear file
 		xx.close()	
 		self.get_seq_to_keep(sorted_seqDict) #call next method, not written yet
@@ -240,7 +240,7 @@ class Gene:
 			for element in (self.tree_in.find_elements(name = double[0])):
 				distance_dict[element] = self.tree_in.distance(element)
 	
-		sorted_distance_dict = sorted(distance_dict.iteritems(), key=operator.itemgetter(1))
+		sorted_distance_dict = sorted(distance_dict.items(), key=operator.itemgetter(1))
 		
 		sorted_distance_dict.pop(0) #keep the shortest, remove others
 		for element in sorted_distance_dict:
