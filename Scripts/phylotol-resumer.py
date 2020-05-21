@@ -56,8 +56,8 @@ if os.path.exists(PathtoOutput):
 
 				input = raxmlTemp + aln
 				output =  aln[:10] + '_postguidance.fas' 
-				os.system("raxmlHPC-AVX2 -s " + input + " -m PROTGAMMALG -f d -p 12345 -# 1 -w " + raxmlTemp + " -n " + output)	
-	#			os.system("raxmlHPC-PTHREADS-AVX2 -s " + input + " -m PROTGAMMALG -f d -p 12345 -# 1 -n " + output + " -T 3")
+#				os.system("raxmlHPC-AVX2 -s " + input + " -m PROTGAMMALG -f d -p 12345 -# 1 -w " + raxmlTemp + " -n " + output)	
+				os.system("raxmlHPC-PTHREADS-AVX2 -s " + input + " -m PROTGAMMALG -f d -p 12345 -# 1 -w " + raxmlTemp + " -n " + output + " -T 3")
 				os.system("mv " + raxmlTemp + "RAxML_bestTree." + output + " " + PathtoOutput + oglistName + "_results2keep/" + "RAxML_bestTree." + output + "_renamed.tre")
 		quit()		
 	else:
