@@ -1,7 +1,17 @@
 import os, sys
 import Utilities
 
-script, rules = sys.argv
+script, rules, mode = sys.argv
+
+"""
+running as ...
+python phylotol-concleaner.py path_to_rules mode
+
+modes:
+c1 = cleaning contamination in gene families DB
+c2 = cleaning contamination in added taxa DB
+c3 = cleaning contamination in gene families DB and added taxa DB
+"""
 
 print("\n\n ** runing PhyloTOL-conCleaner **\n\n")
 
@@ -38,6 +48,14 @@ taxaDBfile = open(PathtoFiles + 'taxaDBpipeline3', 'r').readlines()
 taxaDB = [taxon.strip('\n') for taxon in taxaDBfile]
 homologDB = [taxon[7:] for taxon in taxaDB if taxon.split(',')[0] == 'om']
 
+# making sure that a valid mode was chosen... Valid modes are c1, c2 or c3
+
+if mode not in ["c1", "c2", "c3"]:
+	print("prease choose a correct mode of cleaning contamination:\nc1: in gene families DB\nc2: in added taxa DB\nc3: in both")
+	quit()
+else:
+	print("mode of contamination cleaning: %s\n" % mode)
+
 # Start looping ... The loop will only stop when restart changes to 'n'
 while restart == 'y': 
 	
@@ -48,7 +66,7 @@ while restart == 'y':
 		
 		# Run contamination removal. Check contaminationRemoval() in Utilities for details.  
 		print("run " + str(run) + " PhyloTOL-conCleaner: removing contamination and non-homologs ...\n")
-		Utilities.contaminationRemoval(treeFolder, PathtoFiles, rules, homologDB)
+		Utilities.contaminationRemoval(treeFolder, PathtoFiles, rules, homologDB, mode)
 		print("run " + str(run) + " PhyloTOL-conCleaner: contamination and non-homologs removal done ...")
 
 		# Inside the Temp folder create an exclusive folder for temporal files in current run and move temporary files
@@ -98,7 +116,7 @@ while restart == 'y':
 			# Run PhyloTOL
 			run += 1
 			print("run " + str(run) + " PhyloTOL-conCleaner: runing PhyloTOL with contamination removal\n\n")
-			os.system("python phylotol.py ct")  # run the pipeline with mode 'ct'
+			os.system("python phylotol.py " + mode)  # run the pipeline with mode 'ct'
 			print("run " + str(run) + " PhyloTOL-conCleaner: PhyloTOL done")
 	
 	else:
@@ -107,7 +125,7 @@ while restart == 'y':
 		
 		run += 1
 		print("run " + str(run) + " PhyloTOL-conCleaner: runing PhyloTOL - pre-contamination removal \n\n")
-		os.system("python phylotol.py ct")
+		os.system("python phylotol.py " + mode)
 		print("run " + str(run) + " PhyloTOL-conCleaner: PhyloTOL done")
 
 seqs2remove_all.close()

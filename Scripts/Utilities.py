@@ -48,8 +48,8 @@ def iterGuidance(oglist, og, PathtoOutput, guidanceIter, seqcutoff, colcutoff, r
 				
 		if str(mode) != "ng":
 			print("\n" + og + ": Running Guidance")
-			print('bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 1 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode))
-			os.system('bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 1 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode))
+			print('bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 20 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode))
+			os.system('bash exeGuidance_2.2.sh -i ' + path2og + ' -o ' + tempdir + ' -t 20 -c ' + outdir + ' -g ' + str(guidanceIter) + ' -s ' + str(seqcutoff) + ' -l ' + str(colcutoff) + ' -r ' + str(rescutoff) + ' -m ' + str(mode))
 			os.system('cp ' + path2og + ' ' + tokeepdir + og + '_preguidance.fas') # non-aligned pre-guidance file		
 		
 #			if not os.path.exists(outdir + og + 'forGuidance.fas.output/NInitialSeqBelow4') or not os.path.exists(outdir + og + 'forGuidance.fas.output/NAboveCutoffBelow4'):	
@@ -161,17 +161,21 @@ from the script PhyloTOL.py
 def cleaner(testPipelineList, PathtoFiles, PathtoOutput):
 	
 	os.system('rm -f *log*')
-	os.system('rm -f *RAxML_*')	
+	os.system('rm -f *RAxML_*')
+	os.system('rm -f Utilities.pyc')
+	os.system('rm -f Gene/__init__.pyc')
+	os.system('rm -f Taxon/__init__.pyc')
+	os.system('rm -f Pipeline/__init__.pyc')
+	os.system('rm -rf __pycache__')
+	os.system('rm -rf Gene/__pycache__')
+	os.system('rm -rf Taxon/__pycache__')
+	os.system('rm -rf Pipeline/__pycache__')
+	
 	if os.path.exists(PathtoOutput + '/' + testPipelineList + '_results2keep/'):
 		os.system('mv ' + PathtoOutput + '/' + testPipelineList + '_results2keep/ ' + '../')
-	else:
-		print("error: there is a folder " + '../' + testPipelineList + '_results2keep/')
-		print("exiting the cleaner...\n")
-		quit()
+
 	os.system('rm -r ' + "../my-data/")
 	os.system('rm -r ' + PathtoFiles + 'FileLists_' + testPipelineList + '/')
-	
-	print("\n\nFind your files in folder: " + '../' + testPipelineList + '_results2keep \n\n')
 
 """
 The function contaminationRemoval removes contamination from sequence data (ncbiFiles). It is called 
@@ -185,7 +189,7 @@ file can be used for cleanning permanent databases. This file is re-written in e
 concatenates the file of every run in the file seqs2remove_all
 """
 
-def contaminationRemoval(treeFolder, PathtoFiles, rules, homologDB):
+def contaminationRemoval(treeFolder, PathtoFiles, rules, homologDB, mode):
 			
 	nonHomol_out = open("nonHomologs", "w")
 	nonHomol_treeWnhom = open("nonHomol_treeWnhom", "w")
@@ -193,7 +197,7 @@ def contaminationRemoval(treeFolder, PathtoFiles, rules, homologDB):
 	for file in os.listdir(treeFolder):
 		nonHomINtree = 'n'
 		if file.endswith('postguidance.fas_renamed.fas'):
-			og = file.split("_")[0] + "_" + file.split("_")[1]
+			og = file.replace("_postguidance.fas_renamed.fas", "")
 			postseqs = open(treeFolder + file, "r").readlines()
 			preseqs = open(treeFolder + og + '_preguidance.fas_renamed.fas', "r").readlines()
 			for preseq in preseqs:
@@ -214,6 +218,6 @@ def contaminationRemoval(treeFolder, PathtoFiles, rules, homologDB):
 	os.system('python3 walk_tree_contamination_single.py ' + treeFolder + ' sisterReport')
 	print("\nUtilities.py - contaminationRemoval(): Writing sister report ...\n")
 	time.sleep(60)
-	os.system('ruby seqs2remove.rb ' + PathtoFiles + ' sisterReport ' + rules + ' seqs2remove_out ' + 'nonHomologs')
+	os.system('ruby seqs2remove.rb ' + PathtoFiles + ' sisterReport ' + rules + ' seqs2remove_out ' + 'nonHomologs ' + mode)
 	print("\nUtilities.py - contaminationRemoval(): Replacing fasta files ...\n")
 	time.sleep(60)

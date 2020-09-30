@@ -51,9 +51,16 @@ class Gene:
 
 		os.system ('ls ' + self.PathtoOutput + '/fasta2keep/' + self.OG + '* > ' + self.PathtoOutput + '/' + self.OG + '_list')
 		seqsList = open(self.PathtoOutput + '/' + self.OG + '_list', 'r').readlines()
-		if "seqsList" in locals(): 
+		
+		gf_and_at = "n"
+		if "seqsList" in locals():
+			if not seqsList == []:
+				gf_and_at = "y"
+		
+		if gf_and_at == "y":
 			os.system('cat ' + self.PathtoOutput + '/' + self.OG + '_filtered.fas' + ' ' +  self.PathtoOutput + '/fasta2keep/' + self.OG + '* > ' + self.PathtoOutput + '/' + self.OG + '_all.fas')
 		else:
+			print("You are working only with the gene families database, not added taxa database. If this is intentional ignore the last error message")
 			os.system('cp '+ self.PathtoOutput + '/' + self.OG + '_filtered.fas ' + self.PathtoOutput + '/' + self.OG + '_all.fas')
 
 ##############################################################################
