@@ -59,18 +59,26 @@ def writelog(PathtoOutput,string):
 	
 def main():
 	arg = sys.argv
-	ct = 'n'
+	ct = 'c0'
+	clean = "n"
 	if len(arg) == 2:
 		mode = sys.argv[1]
 		allowed_modes = ['ng', 'nr']
-		if mode == 'ct' : ct = 'y'
+		if str(mode) == 'cl' : clean = 'y'
+		if mode in ["c1", "c2", "c3"] : ct = mode
 		if mode not in allowed_modes : mode = 'df'
 	else:
 		mode = 'df'
-	print("\n** mode -> %s **" % mode)
 		
 	PathtoFiles,testPipelineList,listTaxaInterest,blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment = get_parameters()
 	paramList = [blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment]
+
+	if clean == "y": 
+		Utilities.cleaner(testPipelineList, PathtoFiles, PathtoOutput)
+		print("cleaning folders -- done!")
+		quit()
+
+	print("\n** mode -> %s **" % mode)
 
 	print('################################################################################')
 	print('')
@@ -92,11 +100,11 @@ def main():
 	print('Guidance residue cutoff = %s' % rescutoff)
 	print('Alignment for concatenation = %s' % concatAlignment)
 	print('################################################################################')
-		
+
 	if concatAlignment is not 'y' and concatAlignment is not 'n':
 		print("\n*** your answer concatAlignment = " + concatAlignment + " is not correct. The pipeline takes 'n' as default ***")
 	
-	if not ct == 'y':
+	if ct == 'c0':
 		if os.path.exists('../' + testPipelineList + '_results2keep'):
 			print('terminating PhyloTOL: the folder ' + '../' + testPipelineList + '_results2keep exists. Choose another name for your OG list\n\n')
 			quit()
@@ -293,7 +301,7 @@ def main():
 	count = 0
 	li = []
 	for line in infile:
-		if 'OG5_' in line:
+		if 'OG' in line:
 			outfile = open(PathtoFiles+ '/FileLists_' + testPipelineList + '/list' + str(count),'w')
 			li.append('list' + str(count))
 			outfile.write(line)
@@ -305,21 +313,9 @@ def main():
 		for f in os.listdir(PathtoFiles+ '/FileLists_' + testPipelineList):			
 			newPipe = Pipeline(PathtoFiles +'/'+ testPipelineList, PathtoFiles, ('geneStep',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)	
 		
-		answer_Cleaner = ''
-		valid_answers = ['y', 'n']
-
-		if ct == 'y':
-			answer_Cleaner = 'y'
-		else:
-			while (answer_Cleaner not in valid_answers):  
-				answer_Cleaner = input("\n\nDo you want to execute the cleaner? (y/n): ")
-	
-				if (answer_Cleaner not in valid_answers): 
-					print("\n\nplease answer y or n")
-	
-		if answer_Cleaner is 'y':
-			Utilities.cleaner(testPipelineList, PathtoFiles, PathtoOutput)
-		
+		### By inactivating the next line you can have access to all intermediary files
+		Utilities.cleaner(testPipelineList, PathtoFiles, PathtoOutput)
+				
 	except Exception as e:
 		elog = open('errorlog','a')
 		line = open(PathtoFiles+ '/FileLists_' + testPipelineList + '/' + f,'r').read()
