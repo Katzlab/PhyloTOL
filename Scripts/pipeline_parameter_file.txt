@@ -16,4 +16,5 @@ of each line alone.  Only change the value.  Do not use quotes around values.
 #seqcutoff = 0.3      						##During guidance, taxa are removed if their score is below this cutoff (default as of 11/2014 = .35)
 #colcutoff = 0.4							##During guidance, taxa are removed if their score is below this cutoff (default as of 11/2014 = .40)
 #rescutoff = 0.0                                                        ##During guidance, residues are removed if their score is below this cutoff (default as of 03/2017 = .40)
-#concatAlignment = y						##Do you want to remove paralogs and generate an alignment for concatenation? (y/n) (default as of 03/2017 = n)
+#concatAlignment = n						##Do you want to remove paralogs and generate an alignment for concatenation? (y/n) (default as of 03/2017 = n)
+#majorClades = Op,Pl,EE,Ex,Sr,Ba,Za,Am						## If concatAlignment = y. First two digit codes of the taxa names (which must indicate major clades)
