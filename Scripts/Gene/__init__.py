@@ -23,6 +23,7 @@ class Gene:
 		self.PathtoTemp = Pipeline.PathtoTemp
 		self.PathtoOutput = Pipeline.PathtoOutput
 		self.PathtoOGFiles = Pipeline.PathtoOGFiles
+		self.majorClades = Pipeline.majorClades
 		self.OG = OG.strip() #OGnumber that identifies the gene
 		self.taxa2analyze = Pipeline.taxa2analyze
 		self.seqCodes = {} #dictionary holding numeric seq codes (keys) and original sequence names (values)
@@ -116,7 +117,8 @@ class Gene:
 ##############################################################		
 
 	def getseqsfromCodeFile(self):
-		for mc in ['Op','Pl','EE','Ex','Sr','Ba','Za','Am']:
+		mcs = ((self.majorClades).replace(" ", "")).split(",")
+		for mc in mcs:
 			self.MClist[mc]  = []
 		infile = open(self.PathtoOutput + '/seqcodeFiles/' + self.OG + '_seqcodes.txt','r')
 		for line in infile:

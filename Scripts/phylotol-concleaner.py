@@ -44,7 +44,7 @@ if os.path.exists(treeFolder) : print('terminating PhyloTOL-conCleaner: the fold
 
 
 # grabbing taxa included in the homologs database
-taxaDBfile = open(PathtoFiles + 'taxaDBpipeline3', 'r').readlines()
+taxaDBfile = open(PathtoFiles + 'taxaDBpipeline4', 'r').readlines()
 taxaDB = [taxon.strip('\n') for taxon in taxaDBfile]
 homologDB = [taxon[7:] for taxon in taxaDB if taxon.split(',')[0] == 'om']
 

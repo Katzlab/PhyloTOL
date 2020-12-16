@@ -77,19 +77,12 @@ class Taxon:
 			
 	def set_blast(self,fileName, PathtoBlastFiles):	
 		print(fileName[:10] + ': Parsing blast report')
-		test = ''
 		for blastFileName in os.listdir(PathtoBlastFiles):
 			if re.search(fileName[:10], blastFileName):
 				blastrecords = NCBIXML.parse(open(PathtoBlastFiles + blastFileName,'r'))		
 				for blast in blastrecords:
 					if blast.descriptions:
 						self.blast.append(blast)
-		
-		if test == '':
-			outfile = open('log_' + self.code,'a')
-			outfile.write('no BLAST file found for ' + self.code)
-			outfile.close()
-			
 		
 ###################################################################################################	
 #	parseblast, getgrpp and makeFasta								  							  #
@@ -105,21 +98,19 @@ class Taxon:
 
 		for record in self.blast:
 			if record.descriptions:
+				OGGroup = 'OG5_' +  record.alignments[0].hit_def.split('_')[-1].strip()
 
 				if record.alignments[0].hsps[0].expect < self.blastCutOff:
 
 					outfile = open('log_'+ self.code,'a') #****
-					outfile.write('e is ' + str(record.alignments[0].hsps[0].expect) + ' for ' + self.code + ' cot off is ' + str(self.blastCutOff) + '\n')
+					outfile.write('e is ' + str(record.alignments[0].hsps[0].expect) + ' for ' + OGGroup + ' cot off is ' + str(self.blastCutOff) + '\n')
 					outfile.close()
 					self.getgrpp(record,interestList) 					
 
 				else:
-					self.blast.remove(record)
 					outfile = open('log_'+ self.code,'a') #****
-					outfile.write('e is ' + str(record.alignments[0].hsps[0].expect) + ' for ' + self.code + ' below cutoff' + str(self.blastCutOff) + '\n')
+					outfile.write('e is ' + str(record.alignments[0].hsps[0].expect) + ' for ' + OGGroup + ' below cutoff' + str(self.blastCutOff) + '\n')
 					outfile.close()
-			else:
-				self.blast.remove(record)	
 	
 	def getgrpp(self, record,interestList):
 	
@@ -166,4 +157,4 @@ class Taxon:
 				Utilities.iterUblast(file4ublast, self.tooSimCutOff, self.taxa2SF, self.code)
 				
 			outfile = open('log_'+ self.code,'a') #****
-			outfile.close()	
+			outfile.close()

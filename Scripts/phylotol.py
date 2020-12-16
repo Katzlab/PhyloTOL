@@ -3,20 +3,8 @@ from Pipeline import Pipeline
 import os, sys
 import Utilities
 
-def get_parameters():
-	PathtoFiles = ''					##Path to folders ncbiFiles, BlastFiles, allOGFiles and the OGs of interest file
-	testPipelineList = ''			##Name of the file with the OGs of interest -  this file needs to be in the same location as your datafile folders
-	listTaxaInterest = ''
-	blastCutOff = 1e-15				##Blast e-value cutoff (also depends on how blasts were run)
-	seqLenCompCutOff = 20			##We remove very short sequences during the Taxon step - this is the amino acid length cutoff
-	tooSimCutOff = 0.98				##Sequences are removed if they are more similar than this cutoff (default = 0.98)
-	guidanceIter = 'n'				##number of Guidance iterations for sequences removal. the default is running until no bad scores remain (default = n)
-	seqcutoff = 0.4 				##During guidance, taxa are removed if their score is below this cutoff (default as of 11/2014 = .35)
-	colcutoff = 0.4					##During guidance, taxa are removed if their score is below this cutoff (default as of 11/2014 = .40)
-	rescutoff = 0.4					##During guidance, residues are removed if their score is below this cutoff (default as of 03/2017 = .40)  # MAC---I added this v3
-	concatAlignment = ''					##Do you want to remove paralogs and generate an alignment for concatenation? (y/n)  # MAC---I added this v3
+def get_parameters():	
 
-	#try:
 	infile = open('pipeline_parameter_file.txt','r')
 	
 	for line in infile:
@@ -43,13 +31,13 @@ def get_parameters():
 				colcutoff = float(value)
 			elif attribute == 'rescutoff':
 				rescutoff = float(value)
-			elif attribute == 'concatAlignment':
+			elif attribute == 'concatAlignment': ## Added this for V3
 				concatAlignment = value	
+			elif attribute == 'majorClades': ## Added this fro V4
+				majorClades = value
 
-	#except:
-	#	print('no parameter file found - using default parameters. ')
 		
-	return PathtoFiles,testPipelineList,listTaxaInterest,blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment
+	return PathtoFiles,testPipelineList,listTaxaInterest,blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment,majorClades
 
 
 def writelog(PathtoOutput,string):
@@ -70,13 +58,8 @@ def main():
 	else:
 		mode = 'df'
 		
-	PathtoFiles,testPipelineList,listTaxaInterest,blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment = get_parameters()
+	PathtoFiles,testPipelineList,listTaxaInterest,blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment,majorClades = get_parameters()
 	paramList = [blastCutOff,seqLenCompCutOff,tooSimCutOff,guidanceIter,seqcutoff,colcutoff,rescutoff,concatAlignment]
-
-	if clean == "y": 
-		Utilities.cleaner(testPipelineList, PathtoFiles, PathtoOutput)
-		print("cleaning folders -- done!")
-		quit()
 
 	print("\n** mode -> %s **" % mode)
 
@@ -99,6 +82,7 @@ def main():
 	print('Guidance colum cutoff = %s' % colcutoff)
 	print('Guidance residue cutoff = %s' % rescutoff)
 	print('Alignment for concatenation = %s' % concatAlignment)
+	print('Major clades = %s' % majorClades)
 	print('################################################################################')
 
 	if concatAlignment is not 'y' and concatAlignment is not 'n':
@@ -115,19 +99,16 @@ def main():
 		quit()
 	
 	'''
-	MACR - For pipeleline 3
+	MACR - Incorporated in v3, updated for v4
+ 	
+ 	Since V3 we incorporated the file taxaDBpipeline4 (previously taxaDBpipeline3). This files contains all taxa in the databases "seed dataset - allOG5Files" and 
+ 	"added taxa - ncbiFiles and BlastFiles". This is important for all the procedures incorporated in V3 (e.g., similarity filter, overlap filter)
  
-	The next part of the code produces two lists of taxa. One list is the list of taxa that the user wants 
-	to process through the pipeline. The other list is the list of whole genomes that is used in some other 
-	parts of the pipeline in the gene step. The data that is required is a filed called taxaDBpipeline3 that 
-	should be in DataFiles and a list of taxa of interest provided for the user. The file taxaDBpipeline3
-	says if every taxon of the pipeline is whole genome and if it is prokaryote or eukaryote.
 	'''
 		
-	taxaDBfile = open(PathtoFiles + 'taxaDBpipeline3', 'r')
+	taxaDBfile = open(PathtoFiles + 'taxaDBpipeline4', 'r')
 	taxaDBfile = taxaDBfile.readlines()
 	taxaDB = [taxon.strip('\n') for taxon in taxaDBfile]
-	wholegenomeDB = [taxon[3:] for taxon in taxaDB if taxon.split(',')[0] == 'wg']
 
 	
 	if not os.path.exists(PathtoFiles + listTaxaInterest):
@@ -199,6 +180,7 @@ def main():
 	os.system('mkdir ../my-data/')
 	os.system('mkdir ../my-data/' + testPipelineList + '_results')
 	os.system('mkdir ../my-data/' + PathtoOutput)
+	writelog(PathtoOutput,'mode = ' + mode)
 	writelog(PathtoOutput,'testPipelineList = ' + testPipelineList)
 	writelog(PathtoOutput,'blastCutOff = ' + str(blastCutOff))
 	writelog(PathtoOutput,'seqLenCompCutOff = ' + str(seqLenCompCutOff))
@@ -208,6 +190,14 @@ def main():
 	writelog(PathtoOutput,'colcutoff = ' + str(colcutoff))
 	writelog(PathtoOutput,'rescutoff = ' + str(rescutoff))
 	writelog(PathtoOutput,'concatAlignment = ' + concatAlignment + ' (y = remove paralogs and make alignment, n = keep paralogs and do not make alignment)')
+	writelog(PathtoOutput,'majorClades = ' + str(majorClades))
+	
+# MACR -- V4 -- Added this method here for cleaning intermediary files and logs (for instance, after incomplete run or forced stoppage) using phylotol 	
+	if clean == "y": 
+		Utilities.cleaner(testPipelineList, PathtoFiles, PathtoOutput)
+		print("cleaning folders -- done!")
+		quit()	
+	
 	
 	# MACR 03/04/19 -- added this for calculating og average length for OF and SF
 	oglengths = open(PathtoOutput + "oglengths", "a")
@@ -250,7 +240,7 @@ def main():
 				print('\n' + f + '\n')
 				if f[0] != '.':
 					try:
-						newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)
+						newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,majorClades,mode)
 					except Exception as e:
 						elog = open('errorlog','a')
 						elog.write(f + " failed on %s with: %s" % (f, e))
@@ -263,7 +253,7 @@ def main():
 			print('\n' + f + '\n')
 			if f[0] != '.':
 				try:
-					newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)
+					newPipe = Pipeline(PathtoFiles + testPipelineList, PathtoFiles, ('queueTaxa',f),paramList,taxa2analyze,taxa2SF,majorClades,mode)
 				except Exception as e:
 					elog = open('errorlog','a')
 					elog.write(f + " failed on %s with: %s" % (f, e))
@@ -311,7 +301,7 @@ def main():
 	# MAC - for pipeline 3.1 all methods for gene step were replaced by this one
 	try:
 		for f in os.listdir(PathtoFiles+ '/FileLists_' + testPipelineList):			
-			newPipe = Pipeline(PathtoFiles +'/'+ testPipelineList, PathtoFiles, ('geneStep',f),paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode)	
+			newPipe = Pipeline(PathtoFiles +'/'+ testPipelineList, PathtoFiles, ('geneStep',f),paramList,taxa2analyze,taxa2SF,majorClades,mode)	
 		
 		### By inactivating the next line you can have access to all intermediary files
 		Utilities.cleaner(testPipelineList, PathtoFiles, PathtoOutput)

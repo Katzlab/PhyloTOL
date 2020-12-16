@@ -12,20 +12,13 @@ class Pipeline: #given a file with a list of OGs, makes the interestList and
 					#a fasta file for the OGs.  Also a series of paths for output
 					#and a list of Taxon objects
 	
-	def __init__(self,OGofInterestFile, PathtoFiles, restart, paramList,taxa2analyze,taxa2SF,wholegenomeDB,mode):
+	def __init__(self,OGofInterestFile, PathtoFiles, restart, paramList,taxa2analyze,taxa2SF,majorClades,mode):
 		self.blastCutOff,self.seqLenCompCutOff,self.tooSimCutOff,self.guidanceIter,self.seqcutoff,self.colcutoff, self.rescutoff, self.concatAlignment = paramList
 		testlist = OGofInterestFile.strip('/').split('/')[-1]
 		self.startdate = str(date.today())
 		self.PathtoFiles = PathtoFiles
 		self.OGofInterestFile = OGofInterestFile
-		self.wholegenomeDB = wholegenomeDB
-		self.wgb = []
-		self.wge = []
-		for taxon in self.wholegenomeDB:
-			if taxon.split(',')[0] == 'pro':
-				self.wgb.append(taxon.split(',')[1])
-			else:
-				self.wge.append(taxon.split(',')[1])
+		self.majorClades = majorClades
 		self.taxa2SF = taxa2SF
 		self.taxa2analyze = taxa2analyze
 		self.OGList = [] 
@@ -89,7 +82,7 @@ class Pipeline: #given a file with a list of OGs, makes the interestList and
 ##NEW stuff just up to guidance for Mario, 3/14/15
 ##############################################################
 
-	def restart_geneStep(self,PathtoOutput,OGofInterestFile,PathtoFiles,FileListOG, guidanceIter, seqcutoff, colcutoff, rescutoff, concatAlignment):
+	def restart_geneStep(self,PathtoOutput,OGofInterestFile,PathtoFiles,FileListOG, guidanceIter, seqcutoff, colcutoff, rescutoff, concatAlignment,):
 		OGswithTaxofInterestfile = open(self.PathtoPartialFiles + '/' + FileListOG,'r')
 		for line in OGswithTaxofInterestfile:
 			self.OGList.append(line.strip())
