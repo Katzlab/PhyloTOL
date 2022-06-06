@@ -4,6 +4,7 @@ While we have updated to 4.3.1 to fix known bugs and to add new features (listed
 
 V4.3.1 
 - fixed a bug that was inadvertently deleting data because of a PhyloToL indexing issue
+- improved resumer to increase flexibility
 
 
 OLDER INFORMATION HERE
