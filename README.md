@@ -1,5 +1,12 @@
-# PhyloToL v4.1
+# PhyloToL v4.3.1
 
+While we have updated to 4.3.1 to fix known bugs and to add new features (listed below), we have not updated manual
+
+V4.3.1 
+- fixed a bug that was inadvertently deleting data because of a PhyloToL indexing issue
+
+
+OLDER INFORMATION HERE
 PhyloToL: Phylogenomic Tree of Life
 
 Manual: https://github.com/Katzlab/PhyloTOL/blob/master/manual_phyloToLv4.1.pdf
