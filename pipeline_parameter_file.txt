@@ -1,0 +1,57 @@
+//
+This file needs to reside in the Scripts folder of your PhyloToL instance.
+All parameters have a default value inside the script that runs the pipeline (e.g. phylotol.py)
+but if you want to make any changes, do it here.  Leave the parameter name and format (e.g. #blastCutOff)
+of each line alone.  Only change the value.  Do not use quotes around values.
+//
+
+#GENERAL PARAMETERS (REQUIRED)
+#PathtoFiles = NA		##Path to the folder containing ncbiFiles, BlastFiles, allOGFiles and the OGs of interest file. You don't need this arg if resuming from any step and not running the contamination loop, in which case put "NA"
+#run_until = all 							##Stage until which to run PhyloToL. Options are "ng" (which will run up to but not including guidance), "nr" (which will run up to but not including RAxML), "all" which will run through RAxML, or "clean" which will just clean up the files from the my-data folder ("clean" mode is rarely used)
+#resume = NA							##The absolute (full) path to a folder of files on which to run PhyloToL if not starting from scratch (otherwise use 'NA'). These files can be pre-Guidance (unaligned) or post-Guidance (aligned) or trees if running the contamination loop or concatenating
+#resume_status = NA						##The status of the input file to be resumed. The options are "aligned", "unaligned", "trees" or NA
+#testPipelineList = og_list					##Name of the file with the OGs of interest -  this file needs to be in the same location as your datafile folders
+#listTaxaInterest = outgroup_taxa					##Name of the file with the taxa of interest. If you want to include all taxa, set parameter to 'n'
+
+#blastCutOff = 1e-20						##Blast e-value cutoff (also depends on how blasts were run)
+#seqLenCompCutOff = 10						##We remove very short sequences after  removing columns in guidance - this is the amino acid length cutoff 
+#tooSimCutOff = 98						##During needle comparisons, sequences are removed if they are more similar than this cutoff (default = 0.98)
+#guidanceIter = 5						##number of Guidance iterations for sequences removal. the default is running until no bad scores remain (default = n)
+#seqcutoff = 0.3      						##During guidance, taxa are removed if their score is below this cutoff (default as of 11/2014 = .35)
+#colcutoff = 0.4						##During guidance, columns are removed if their score is below this cutoff (default as of 11/2014 = .40)
+#rescutoff = 0.0                                                ##During guidance, residues are removed if their score is below this cutoff (default as of 03/2017 = .40)
+#concatAlignment = n						##Do you want to remove paralogs and generate an alignment for concatenation? (y/n) (default as of 03/2017 = n)
+#majorClades = Op,Pl,EE,Ex,Sr,Ba,Za,Am				## If concatAlignment = y. First two digit codes of the taxa names (which must indicate major clades)
+
+
+#TREE-WALKING SPREADSHEET PARAMETERS (OPTIONAL -- DEFAULT: RETURN ALL DATA)
+#query_clades = NA						##A list of 2, 4, 5, 7, 8, or 10 digit codes specifying which taxa for which to count sisters, separated by a comma. Alternatively, input a file containing a list of 10 digit codes of taxa for which to return sisters if there are a lot, e.g. all forams (A comma separated list or the name of a text file in the DataFiles folder)
+#sister_clades = NA						##A list of 2, 4, 5, 7, 8, or 10 digit codes specifying which taxa which sisters to represent in the spreadsheet, separated by a comma. Alternatively, input a file containing a list of 10 digit codes of taxa for sisters to represent if there are a lot, e.g. all forams (A comma separated list or the name of a text file in the DataFiles folder)
+#break_up = NA							##A list of major clades for which to break up the sister report into minor clades, separated by a comma
+#branch_length_filter = NA					##Filter tips to represent by branch length. Options: "NA", "avg", int, or float.
+#single_sister_only = n 				##Whether or not you only want to report sister relationships when there is only a single taxon sister to a sequence (y/n)
+
+
+#CONTAMINATION LOOP PARAMETERS (REQUIRED)
+#use_contloop = n						##Do you want to run the contamination loop? (y/n) (default as of 06/2021 = n)
+#seq_or_clade = clade						##Do you want to remove sequences by looking at the sisters of each sequence in a rules file, or by picking the best clades? (seq/clade) (default as of 06/2021 = clade)
+#n_loops = 5							##The maximum number of loops. Default is "inf" which will go until there are no more contaminant sequences. Otherwise, input an integer value
+
+#rules_file = NA						##Only used in "seq" mode. Sequences in the rules file with specified contaminants will be removed if sister only to those contaminants (NA or name text file in DataFiles folder)
+#remove_nm = false						##Only used in "seq" mode. When set to true, sequences sister to a non-monophyletic group of taxa that all fall into categories designated as contaminants in the rules file will be removed (true/false)
+
+#target_clade = NA						##Only used in "clade" mode. Selected clades can have no more than num_contams (below) sequences that are not of this clade (can be 2, 4, 5, 7, 8, or 10 digits)
+#num_contams = 2							##Only used in "clade" mode. Selected clades can have no more than this number of sequences that are not of the target clade (integer) (default as of 06/2021 = 1)
+#min_target_presence = 8					##Only used in "clade" mode. See above. (integer) (default as of 06/2021 = 13)
+#target_taxa_file = target_taxa						##Only used in "clade" mode. A file containing 2, 4, 5, 7, 8, or 10 digit codes that are your target taxa; you must have at least min_target_presence (above) of ten-digit codes that match these criteria in your selected clade (NA or name of text file in DataFiles folder)
+#at_least_file = at_least_taxa					##Only used in "clade" mode. A file containing 2, 4, 5, 7, 8, or 10 digit codes; any selected clade must have at least at_least_sisters_num of taxa that match these criteria; this is used to require the presence of certain sister lineages (NA or name of text file in DataFiles folder)
+#at_least_sisters_num = 1					##Only used in "clade" mode. See above. (integer) (default as of 06/2021 = 13)
+#return_subtrees = y 						##Set this to "y" to return a .tre file for each clade that was selected as robust in the final set of trees. This is recommended (y/n)
+#filter_differential_coverage = y			##Used in either "clade" mode. Removes the sequence with lower coverage if there are two seqs with sufficiently-differential coverage (defined by coverage_diff_ parameters below) in the same clade (y/n)
+#coverage_diff_OM = 2						##The orders of magnitude by which the coverages of two sequences in the same clade can differ for the seq with lower coverage to be removed when filter_differential_coverage = y (integer)
+#coverage_diff_abs = NA						##The absolute number by which the coverages of two sequences in the same clade can differ for the seq with lower coverage to be removed when filter_differential_coverage = y (integer or NA)
+
+#OTHER
+#tree_font_size = 12
+
+
